@@ -7,7 +7,7 @@ import time
 import json
 import os
 import ffmpeg
-import boto3
+import subprocess
 
 # def autoscaling():
 #     print('Iniciando consulta autoscaling')
@@ -91,7 +91,9 @@ def job():
                     print('* S3 * - realizando conversión')
                     source_file = CARPETA_CARGA.joinpath(t.fileName).resolve()
                     target_file = CARPETA_DESCARGA.joinpath(f"{fileName}.{t.newFormat.name}").resolve()
-                    ffmpeg.input(str(source_file)).output(str(target_file)).overwrite_output().run()
+
+                    subprocess.call(['ffmpeg', '-i', source_file, target_file])
+                    # ffmpeg.input(str(source_file)).output(str(target_file)).overwrite_output().run()
 
                     with open(CARPETA_DESCARGA.joinpath(f"{fileName}.{t.newFormat.name}"), 'rb') as file:
                         print('* S3 * - subiendo archivo a bucket')
